@@ -3,6 +3,7 @@
 
 # Voice configuration - can be set via KOKORO_VOICE env var in ~/.claude/settings.json
 VOICE="${KOKORO_VOICE:-af_sky}"
+LANG_CODE="${KOKORO_LANG:-en-us}"
 
 # Audio ducking configuration - lowers Apple Music volume while TTS plays (like Google Maps in CarPlay)
 # macOS only - uses AppleScript to control Apple Music's internal volume
@@ -133,7 +134,7 @@ if [ -n "$claude_response" ]; then
   fi
 
   # Run kokoro-tts in background and capture PID for audio ducking restore
-  kokoro-tts "$tmpfile" --voice "$VOICE" --stream --model "MODEL_PATH_PLACEHOLDER/kokoro-v1.0.onnx" --voices "MODEL_PATH_PLACEHOLDER/voices-v1.0.bin" >>/tmp/kokoro-hook.log 2>&1 &
+  kokoro-tts "$tmpfile" --voice "$VOICE" --lang "$LANG_CODE" --stream --model "MODEL_PATH_PLACEHOLDER/kokoro-v1.0.onnx" --voices "MODEL_PATH_PLACEHOLDER/voices-v1.0.bin" >>/tmp/kokoro-hook.log 2>&1 &
   TTS_PID=$!
   echo "[$(date)] Started kokoro-tts with PID: $TTS_PID" >> /tmp/kokoro-hook.log
 
