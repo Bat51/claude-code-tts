@@ -40,7 +40,7 @@ fi
 # Loop through messages in reverse to find text that appears AFTER tool uses completed
 # This prevents reading text that PreToolUse hook already played
 # NOTE: Using process substitution < <(tail -r ...) instead of pipe to avoid subshell variable scope issues
-# Using tail -r instead of tac for macOS compatibility
+# Cross-platform reverse: tac on Linux, tail -r on macOS
 seen_tool_result=0
 claude_response=""
 while IFS= read -r line; do
@@ -64,7 +64,7 @@ while IFS= read -r line; do
       fi
     fi
   fi
-done < <(tail -r "$transcript_path")
+done < <(tac "$transcript_path" 2>/dev/null || tail -r "$transcript_path")
 # Truncate to 5000 characters
 claude_response="${claude_response:0:5000}"
 
